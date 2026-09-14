@@ -1,18 +1,4 @@
 #!/usr/bin/env python3
-"""
-COOL AI Companion — 本地網頁版聊天前端
-
-架構：
-  瀏覽器(HTML/JS) <--localhost--> 本地Flask伺服器(這個檔案) <--HTTPS--> NTU COOL AI 後端
-
-為什麼要繞一手本地伺服器：NTU的API不開放瀏覽器跨來源請求(CORS)，
-所以真正打API的動作要由這支伺服器端程式代勞，瀏覽器只跟localhost講話。
-
-執行方式：
-  pip install flask requests
-  python server.py
-  瀏覽器打開 http://127.0.0.1:5001
-"""
 
 import base64
 import json
