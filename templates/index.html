@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>COOL AI 聊天</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="app">
+    <!-- 側邊欄 -->
+    <aside class="sidebar">
+      <div class="sidebar-head">
+        <span class="brand">COOL AI</span>
+        <button id="settingsBtn" class="icon-btn" title="設定" aria-label="設定">⚙</button>
+      </div>
+
+      <div class="sidebar-actions">
+        <button id="newChatBtn" class="btn btn-primary">＋ 新對話</button>
+        <button id="tempChatBtn" class="btn btn-ghost">◌ 臨時對話</button>
+      </div>
+
+      <div id="chatList" class="chat-list"></div>
+    </aside>
+
+    <!-- 主面板 -->
+    <main class="main">
+      <div id="emptyState" class="empty-state">
+        <p>選一個對話，或按「新對話」開始。</p>
+      </div>
+
+      <div id="chatPane" class="chat-pane" hidden>
+        <header class="chat-header">
+          <div class="chat-title-wrap">
+            <span id="chatTitle" class="chat-title">新對話</span>
+            <span id="tempBadge" class="temp-badge" hidden>臨時（不會保存）</span>
+          </div>
+          <div class="chat-header-right">
+            <label class="video-select-label">Video ID
+              <select id="videoIdSelect"></select>
+            </label>
+            <label class="thinking-toggle">
+              <input type="checkbox" id="thinkingToggle">
+              思考模式
+            </label>
+            <button id="deleteChatBtn" class="icon-btn" title="刪除此對話">🗑</button>
+          </div>
+        </header>
+
+        <div id="messages" class="messages"></div>
+
+        <div class="composer">
+          <div id="attachPreview" class="attach-preview" hidden>
+            <span id="attachName"></span>
+            <button id="attachRemove" class="link-btn">移除</button>
+          </div>
+          <div class="composer-row">
+            <textarea id="questionInput" placeholder="輸入問題…（Enter 送出，Shift+Enter 換行）" rows="2"></textarea>
+          </div>
+          <div class="composer-footer">
+            <div class="composer-left">
+              <input type="file" id="imageInput" accept="image/png,image/jpeg" hidden>
+              <button id="attachBtn" class="icon-btn" title="上傳圖片">📎</button>
+            </div>
+            <div class="composer-right">
+              <div id="charMeter" class="char-meter">
+                <div id="charBar" class="char-bar"></div>
+                <span id="charText" class="char-text">0 / 20000</span>
+              </div>
+              <button id="sendBtn" class="btn btn-primary">送出</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- 設定 Modal -->
+  <div id="settingsModal" class="modal-overlay" hidden>
+    <div class="modal">
+      <h2>設定</h2>
+
+      <label class="field-label" for="userKeyInput">使用者金鑰（啟用碼）</label>
+      <div class="key-row">
+        <input type="password" id="userKeyInput" placeholder="貼上你的啟用碼">
+        <button id="toggleKeyVisible" class="icon-btn" title="顯示/隱藏">👁</button>
+      </div>
+
+      <label class="field-label">Video ID 清單（每行一組，開新對話時隨機挑一組）</label>
+      <textarea id="videoIdsInput" rows="6" placeholder="video-id-1&#10;video-id-2&#10;video-id-3"></textarea>
+
+      <div class="settings-grid">
+        <div>
+          <label class="field-label" for="charLimitInput">字數上限（0 = 不限制）</label>
+          <input type="number" id="charLimitInput" min="0" step="500">
+        </div>
+        <div>
+          <label class="field-label" for="historyTurnsInput">歷史紀錄截斷輪數（0 = 不截斷）</label>
+          <input type="number" id="historyTurnsInput" min="0" step="1">
+        </div>
+      </div>
+      <p class="field-hint">歷史紀錄截斷：超過設定輪數時，只保留最近 N 則訊息送給AI（0代表全部保留）。字數上限只看總字數，跟輪數截斷是各自獨立的兩道關卡。</p>
+
+      <div class="modal-actions">
+        <button id="settingsCancel" class="btn btn-ghost">取消</button>
+        <button id="settingsSave" class="btn btn-primary">儲存</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
