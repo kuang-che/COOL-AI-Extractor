@@ -35,7 +35,7 @@ python server.py
 - 不要把 server.py 開放到公網或分享金鑰給別人。
 
 ## 關於video-id
-- 需要使用抓包工具抓取
+- 需要使用debug-tool抓取
 - 同一課程的所有影片共用同一組id
 - 建議多組video-id輪換
 - 程式中有兩組可以試試看(不保證能用)：
@@ -43,9 +43,16 @@ python server.py
 a533137f-3d03-4951-9a6e-26bed8c8487b
 4d38e152-a170-4977-b2cc-84e528a4bbb3
 ```
+運行debug-tool方法：
+1. 在資料夾根目錄打開powershell
+2. ```powershell -ExecutionPolicy Bypass -File .\capture_video_id.ps1 ```
+3. 會自動打開視窗，可正常匯入影片，並進行至少一次AI問答
+4. 程式會將抓到的所有video-id記錄在```video_ids.txt```裡
+5. 請先結束程式視窗，再關閉powershell視窗。否則無法正常結束debug模式。
 
 ## 如何偽造字幕
-根據請求格式，程式在送出的時候應加入字幕：
+可以根據以下範例寫字幕格式，也可以輸入多行字幕，點擊"轉換json"讓程式自動轉換。
+根據請求格式，程式在送出的時候會加入字幕：
 ```json
 full payload = {
   "video_id": "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX",
