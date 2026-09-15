@@ -48,7 +48,7 @@ a533137f-3d03-4951-9a6e-26bed8c8487b
 2. 執行命令```powershell -ExecutionPolicy Bypass -File .\debug_tool.ps1 ```
 3. 會自動打開視窗，可正常匯入影片，並進行至少一次AI問答
 4. 程式會將抓到的所有video-id記錄在```video_ids.txt```裡
-5. 請先結束程式視窗，再關閉powershell視窗。否則無法正常結束debug模式。
+5. 請先結束COOL AI Companion視窗，再關閉powershell視窗。否則無法正常結束debug模式。
 
 ## 如何偽造字幕
 可以根據以下範例寫字幕格式，也可以輸入多行字幕，點擊"轉換json"讓程式自動轉換。
