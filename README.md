@@ -45,7 +45,7 @@ a533137f-3d03-4951-9a6e-26bed8c8487b
 ```
 運行debug-tool方法：
 1. 在資料夾根目錄打開powershell
-2. 執行命令```powershell -ExecutionPolicy Bypass -File .\debug-tool.ps1 ```
+2. 執行命令```powershell -ExecutionPolicy Bypass -File .\debug_tool.ps1 ```
 3. 會自動打開視窗，可正常匯入影片，並進行至少一次AI問答
 4. 程式會將抓到的所有video-id記錄在```video_ids.txt```裡
 5. 請先結束程式視窗，再關閉powershell視窗。否則無法正常結束debug模式。
