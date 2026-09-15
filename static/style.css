@@ -61,10 +61,22 @@ html, body {
   display: none !important;
 }
 
+/* 僅在手機端顯示的元件，桌面版預設隱藏 */
+.mobile-only-btn,
+.mobile-only-flex {
+  display: none !important;
+}
+
+/* 側邊欄抽屜遮罩，桌面版預設隱藏 */
+.sidebar-backdrop {
+  display: none;
+}
+
 /* ================= 應用佈局 ================= */
 .app {
   display: flex;
   height: 100vh;
+  height: 100dvh;
   width: 100vw;
   overflow: hidden;
   position: relative;
@@ -503,10 +515,12 @@ html, body {
   flex: 1;
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: 100%;
+  min-height: 0;
   min-width: 0;
   position: relative;
   background-color: var(--bg-main);
+  overflow: hidden;
 }
 
 /* 頂部導航列 */
@@ -816,7 +830,8 @@ html, body {
 /* 訊息氣泡通用 (載入靜態歷史時不單獨做 translateY，防止多條訊息同時震顫抖動) */
 .msg-wrapper {
   display: flex;
-  gap: 14px;
+  flex-direction: column;
+  gap: 4px;
   width: 100%;
 }
 
@@ -838,7 +853,7 @@ html, body {
 
 /* 使用者訊息 (右側深色膠囊) */
 .msg-wrapper.user {
-  justify-content: flex-end;
+  align-items: flex-end;
 }
 
 .msg-wrapper.user .msg-content-box {
@@ -880,20 +895,139 @@ html, body {
 
 .msg-user-text {
   word-break: break-word;
+  white-space: pre-wrap;
 }
 
 /* AI 助理訊息 (左側全寬無邊框流) */
 .msg-wrapper.assistant {
-  justify-content: flex-start;
+  align-items: flex-start;
   width: 100%;
 }
 
 .msg-wrapper.assistant .msg-content-box {
-  flex: 1;
+  width: 100%;
   min-width: 0;
   color: var(--text-primary);
   font-size: 15px;
   line-height: 1.7;
+}
+
+/* 訊息底部操作工具列 (ChatGPT 官方風格) */
+.msg-action-bar {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 0;
+  opacity: 0.65;
+  transition: opacity 0.15s ease;
+  user-select: none;
+}
+
+.msg-wrapper:hover .msg-action-bar {
+  opacity: 1;
+}
+
+.msg-action-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-tertiary);
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, transform 0.1s ease;
+}
+
+.msg-action-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-primary);
+}
+
+.msg-action-btn:active {
+  transform: scale(0.92);
+}
+
+.msg-action-btn.copied {
+  color: var(--accent-green) !important;
+}
+
+/* 使用者行內編輯框 (ChatGPT 官方風格) */
+.inline-edit-box {
+  width: 100%;
+  max-width: 75%;
+  background: #2f2f2f;
+  border: 1px solid var(--border-medium);
+  border-radius: 16px;
+  padding: 12px 14px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+  animation: fadeIn 0.12s ease;
+}
+
+.inline-edit-textarea {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 15px;
+  line-height: 1.6;
+  resize: none;
+  min-height: 48px;
+  max-height: 220px;
+  overflow-y: auto;
+  width: 100%;
+}
+
+.inline-edit-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.inline-edit-cancel-btn {
+  background: transparent;
+  border: 1px solid var(--border-medium);
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.inline-edit-cancel-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.inline-edit-submit-btn {
+  background: #ffffff;
+  color: #000000;
+  border: none;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: background 0.15s ease, opacity 0.15s ease;
+}
+
+.inline-edit-submit-btn:hover {
+  background: #e5e5e5;
+}
+
+.inline-edit-submit-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }
 
 /* ================= Markdown 排版樣式 ================= */
@@ -1172,6 +1306,7 @@ html, body {
   flex-direction: column;
   position: relative;
   z-index: 15;
+  flex-shrink: 0;
 }
 
 /* 附件預覽膠囊 */
@@ -1325,6 +1460,9 @@ html, body {
   color: #737373;
   cursor: not-allowed;
   transition: all 0.15s ease;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .capsule-send-btn:not(:disabled) {
@@ -1730,16 +1868,464 @@ html, body {
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* 響應式調整 */
+/* ================= 下拉重新整理指示器 (Pull to Refresh) ================= */
+.ptr-indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 0;
+  z-index: 25;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.ptr-bubble {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #262626;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-thinking);
+  opacity: 0;
+  transform: translateY(-45px) rotate(0deg);
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease, color 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+}
+
+.ptr-bubble.ptr-ready {
+  color: #93c5fd;
+  border-color: rgba(59, 130, 246, 0.5);
+  background: rgba(59, 130, 246, 0.16);
+  box-shadow: 0 4px 18px rgba(59, 130, 246, 0.35);
+}
+
+.ptr-bubble.ptr-loading .ptr-icon {
+  animation: ptrSpin 0.75s linear infinite;
+}
+
+@keyframes ptrSpin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* =========================================================
+   手機端適配 (對標 ChatGPT 手機端介面佈局)
+   ========================================================= */
 @media (max-width: 768px) {
-  .sidebar {
-    position: absolute;
+  .mobile-only-btn {
+    display: inline-flex !important;
+  }
+
+  /* 視窗高度與彈性適配 */
+  html, body {
+    width: 100%;
+    height: 100%;
+    height: 100dvh;
+    overflow: hidden;
+  }
+
+  .app {
+    position: fixed;
+    top: 0;
     left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    height: 100dvh;
+    max-height: 100dvh;
+    overflow: hidden;
+  }
+
+  .main {
+    height: 100%;
+    max-height: 100%;
+    min-height: 0;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  /* 遮罩層 (Backdrop) */
+  .sidebar-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 990;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.26s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .app.sidebar-mobile-open .sidebar-backdrop {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* 側邊欄抽屜化 (Drawer) */
+  .sidebar {
+    position: fixed;
     top: 0;
     bottom: 0;
-    box-shadow: 4px 0 20px rgba(0,0,0,0.5);
-  }
-  .app:not(.sidebar-open) .sidebar {
+    left: 0;
+    width: min(84vw, 320px);
+    min-width: unset;
+    max-width: 84vw;
+    height: 100% !important;
+    height: 100dvh !important;
+    max-height: 100dvh !important;
+    z-index: 1000;
+    box-shadow: 6px 0 32px rgba(0, 0, 0, 0.6);
     transform: translateX(-100%);
+    transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+    padding: 10px 14px;
+    padding-top: max(10px, env(safe-area-inset-top));
+    padding-bottom: max(16px, env(safe-area-inset-bottom, 16px));
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden;
+    box-sizing: border-box;
+  }
+
+  .app.sidebar-mobile-open .sidebar {
+    transform: translateX(0);
+  }
+
+  /* 手機端側邊欄底部設定欄：固定在抽屜最底端，無論是否 collapsed 都永遠可見並維持點擊 */
+  .sidebar-footer {
+    display: flex !important;
+    flex-direction: column !important;
+    margin-top: auto !important;
+    padding-top: 10px !important;
+    padding-bottom: max(8px, env(safe-area-inset-bottom, 8px)) !important;
+    border-top: 1px solid var(--border-subtle) !important;
+    flex-shrink: 0 !important;
+    background-color: var(--bg-sidebar) !important;
+  }
+
+  .user-profile-btn {
+    width: 100% !important;
+    height: 48px !important;
+    padding: 6px 10px !important;
+    margin: 0 !important;
+    border-radius: 10px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    cursor: pointer !important;
+    touch-action: manipulation !important;
+    -webkit-tap-highlight-color: transparent !important;
+    background: rgba(255, 255, 255, 0.04) !important;
+    transition: background 0.15s ease !important;
+  }
+
+  .user-profile-btn:active {
+    background: rgba(255, 255, 255, 0.12) !important;
+  }
+
+  .user-avatar {
+    width: 32px !important;
+    height: 32px !important;
+    border-radius: 8px !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0 !important;
+  }
+
+  .user-info {
+    display: flex !important;
+    flex-direction: column !important;
+    opacity: 1 !important;
+    max-width: 180px !important;
+    transform: none !important;
+    pointer-events: auto !important;
+    margin-left: 10px !important;
+    flex: 1 !important;
+    white-space: nowrap !important;
+  }
+
+  .user-name {
+    font-size: 13.5px !important;
+    font-weight: 500 !important;
+    color: var(--text-primary) !important;
+  }
+
+  .user-plan {
+    font-size: 11.5px !important;
+    color: var(--text-tertiary) !important;
+  }
+
+  /* 手機端強制全展開抽屜樣式，不受桌面端折疊 class 影響 */
+  .app.sidebar-collapsed .sidebar {
+    width: min(84vw, 320px);
+    min-width: unset;
+    max-width: 84vw;
+    padding: 10px 14px;
+    padding-top: max(10px, env(safe-area-inset-top));
+    padding-bottom: max(16px, env(safe-area-inset-bottom, 16px));
+  }
+  .app.sidebar-collapsed .brand {
+    max-width: 160px;
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+  }
+  .app.sidebar-collapsed .sidebar-header {
+    justify-content: space-between;
+    padding: 4px 4px 12px 4px;
+  }
+  .app.sidebar-collapsed .sidebar-header-actions {
+    width: auto;
+  }
+  .app.sidebar-collapsed .sidebar-quick-nav {
+    align-items: stretch;
+  }
+  .app.sidebar-collapsed .nav-item {
+    width: 100%;
+    height: 38px;
+    padding: 0 10px;
+    margin: 0;
+    justify-content: flex-start;
+  }
+  .app.sidebar-collapsed .nav-text {
+    max-width: 160px;
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+    margin-left: 10px;
+  }
+  .app.sidebar-collapsed .sidebar-history-section {
+    opacity: 1;
+    transform: none;
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  /* 頂部導航列 (ChatGPT 風格：左漢堡、中 Video ID、右新對話) */
+  .top-nav {
+    height: calc(48px + env(safe-area-inset-top, 0px));
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-left: 10px;
+    padding-right: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--bg-main);
+  }
+
+  .top-nav-left {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+    flex: 1;
+  }
+
+  .top-nav-right {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+
+  /* 頂部 Video ID 下拉按鈕精簡化 */
+  .video-dropdown-wrapper {
+    min-width: 0;
+    max-width: calc(100vw - 120px);
+  }
+
+  .video-dropdown-btn {
+    padding: 5px 9px;
+    gap: 5px;
+    font-size: 13px;
+    max-width: 100%;
+  }
+
+  .video-btn-prefix {
+    display: none; /* 手機端隱藏「Video ID」文字，騰出空間給實際 ID */
+  }
+
+  .video-btn-label {
+    max-width: 140px;
+    font-size: 12.5px;
+  }
+
+  .video-dropdown-menu {
+    position: fixed;
+    top: calc(52px + env(safe-area-inset-top, 0px));
+    left: 12px;
+    right: 12px;
+    width: auto;
+    max-width: none;
+  }
+
+  /* 內容視口與歷史對話區 */
+  .chat-viewport {
+    padding-bottom: 0;
+  }
+
+  .hero-container {
+    padding: 40px 16px 20px;
+  }
+
+  .hero-title {
+    font-size: 24px;
+  }
+
+  .messages-container {
+    padding: 14px 12px 24px;
+    gap: 16px;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  /* 訊息氣泡適配手機螢幕寬度 */
+  .msg-wrapper.user .msg-content-box {
+    max-width: 88%;
+    padding: 9px 13px;
+    font-size: 14.5px;
+    border-radius: 16px 16px 4px 16px;
+  }
+
+  .msg-wrapper.assistant .msg-content-box {
+    font-size: 14.5px;
+    line-height: 1.65;
+  }
+
+  .msg-img-preview {
+    max-width: 240px;
+    max-height: 180px;
+  }
+
+  .code-block-wrapper {
+    margin: 12px 0;
+    border-radius: 8px;
+  }
+
+  .code-block-wrapper pre {
+    padding: 10px 12px;
+    font-size: 12.5px;
+  }
+
+  /* 思考過程區塊 */
+  .thinking-summary {
+    padding: 7px 10px;
+    font-size: 12px;
+  }
+
+  .thinking-content {
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+
+  /* 底部輸入膠囊區 (Composer) */
+  .composer-container {
+    padding: 0 10px max(6px, env(safe-area-inset-bottom, 6px));
+    max-width: 100%;
+    flex-shrink: 0;
+  }
+
+  .composer-capsule {
+    padding: 6px 8px 6px 12px;
+    border-radius: 24px;
+    gap: 6px;
+  }
+
+  /* 重要：文字框字體在手機端設為 16px，徹底解決 iOS Safari 聚焦時自動縮放放大問題 */
+  .composer-textarea {
+    font-size: 16px;
+    line-height: 1.4;
+    min-height: 24px;
+    max-height: 130px;
+    padding: 5px 0;
+  }
+
+  .capsule-btn {
+    width: 34px;
+    height: 34px;
+  }
+
+  .capsule-send-btn {
+    width: 32px;
+    height: 32px;
+  }
+
+  .thinking-pill {
+    padding: 3px 8px;
+    font-size: 11px;
+    height: 28px;
+  }
+
+  .composer-subline {
+    padding: 4px 4px 0;
+    font-size: 10.5px;
+  }
+
+  .privacy-hint {
+    font-size: 10.5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 70%;
+  }
+
+  .char-counter {
+    font-size: 10.5px;
+  }
+
+  /* 設定視窗 Modal 手機端滿屏舒適體驗 */
+  .modal-overlay {
+    padding: 10px;
+    align-items: flex-end; /* 手機端呈現底部浮出抽屜風格 */
+  }
+
+  .modal-card {
+    width: 100%;
+    max-width: 100%;
+    max-height: 90dvh;
+    max-height: 90vh;
+    border-radius: 20px 20px 16px 16px;
+    padding: 18px 16px 16px;
+    overflow-y: auto;
+  }
+
+  .settings-row-2col {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .subtitles-toolbar {
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  /* 刪除確認彈窗 */
+  .delete-dialog-card {
+    width: 100%;
+    max-width: 96vw;
+    padding: 20px 16px;
+    border-radius: 18px;
+  }
+
+  .delete-dialog-footer {
+    flex-direction: column-reverse;
+    gap: 8px;
+  }
+
+  .dialog-pill-btn {
+    width: 100%;
+    height: 40px;
   }
 }
